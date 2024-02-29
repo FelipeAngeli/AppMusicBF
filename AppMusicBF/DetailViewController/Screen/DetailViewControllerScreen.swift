@@ -37,6 +37,14 @@ class DetailViewControllerScreen: UIView {
         return card
     }()
     
+    lazy var navBar: CustomNavbar = {
+        let view = CustomNavbar()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .black
+        view.setupView(data: cardModel ?? CardViewModel())
+        return view
+    }()
+    
     lazy var tableView: UITableView = {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -45,6 +53,7 @@ class DetailViewControllerScreen: UIView {
         table.showsVerticalScrollIndicator = false
         table.isScrollEnabled = false
         table.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        table.register(DetailTableViewCell.self, forCellReuseIdentifier: DetailTableViewCell.identifier)
         return table
     }()
     
@@ -57,6 +66,12 @@ class DetailViewControllerScreen: UIView {
         btn.tintColor = .white
         btn.addTarget(self, action: #selector(self.closePressed), for: .touchUpInside)
         return btn
+    }()
+    
+    lazy var playerView: CustomPlayerView = {
+        let play = CustomPlayerView()
+        play.translatesAutoresizingMaskIntoConstraints = false
+        return play
     }()
     
     @objc func closePressed(){
@@ -81,7 +96,9 @@ class DetailViewControllerScreen: UIView {
         self.addSubview(self.scrollView)
         self.scrollView.addSubview(self.cardView)
         self.scrollView.addSubview(self.tableView)
+        self.addSubview(self.navBar)
         self.addSubview(self.closeBtn)
+        self.addSubview(self.playerView)
     }
     
     private func setupConstraints() {
@@ -108,11 +125,22 @@ class DetailViewControllerScreen: UIView {
             self.tableView.widthAnchor.constraint(equalToConstant: self.frame.size.width),
             self.tableView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor),
             
+            self.navBar.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.navBar.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.navBar.heightAnchor.constraint(equalToConstant: ((topPadding ?? 0.0) + 80)),
+            
             self.closeBtn.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
             self.closeBtn.widthAnchor.constraint(equalToConstant: 30),
             self.closeBtn.heightAnchor.constraint(equalToConstant: 30),
             self.closeBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10),
+            
+            self.playerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.playerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.playerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            self.playerView.heightAnchor.constraint(equalToConstant: 120),
         ])
+        self.navbarTopAnchor = self.navBar.topAnchor.constraint(equalTo: self.topAnchor, constant: -((topPadding ?? 0.0) + 60))
+        self.navbarTopAnchor?.isActive = true
     }
     
     public func configAllDelegates(tableViewDelegate: UITableViewDelegate, tableViewDataSource:UITableViewDataSource, scrollViewDelegate:UIScrollViewDelegate, detailViewScreenDelegate:DetailViewControllerScreenDelegate) {
