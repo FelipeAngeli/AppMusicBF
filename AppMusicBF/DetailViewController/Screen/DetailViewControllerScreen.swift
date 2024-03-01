@@ -15,6 +15,7 @@ class DetailViewControllerScreen: UIView {
     
     var cardModel: CardViewModel?
     var navbarTopAnchor: NSLayoutConstraint?
+    var playerViewBottomAnchor: NSLayoutConstraint?
     
     private weak var delegate:DetailViewControllerScreenDelegate?
     
@@ -136,11 +137,13 @@ class DetailViewControllerScreen: UIView {
             
             self.playerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.playerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.playerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             self.playerView.heightAnchor.constraint(equalToConstant: 120),
         ])
         self.navbarTopAnchor = self.navBar.topAnchor.constraint(equalTo: self.topAnchor, constant: -((topPadding ?? 0.0) + 60))
         self.navbarTopAnchor?.isActive = true
+        
+        self.playerViewBottomAnchor = self.playerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant:120)
+        self.playerViewBottomAnchor?.isActive = true
     }
     
     public func configAllDelegates(tableViewDelegate: UITableViewDelegate, tableViewDataSource:UITableViewDataSource, scrollViewDelegate:UIScrollViewDelegate, detailViewScreenDelegate:DetailViewControllerScreenDelegate) {

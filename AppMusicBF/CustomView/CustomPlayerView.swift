@@ -18,14 +18,12 @@ class CustomPlayerView: UIView {
         let img = UIImageView()
         img.translatesAutoresizingMaskIntoConstraints = false
         img.contentMode = .scaleAspectFill
-        img.image = UIImage(named: "list4")
         return img
     }()
     
     lazy var marqueeLabel: MarqueeLabel = {
         let marque = MarqueeLabel()
         marque.translatesAutoresizingMaskIntoConstraints = false
-        marque.text = "Aqui será o nome da música onde tera o scroll"
         marque.font = UIFont(name: "Avenir-Heavy", size: 18)
         marque.textColor = .white.withAlphaComponent(0.8)
         marque.type = .continuous
@@ -78,6 +76,7 @@ class CustomPlayerView: UIView {
         self.trackBar.progress = Float(self.time / 120)
         if self.time >= 120 {
             self.videoTimer?.invalidate()
+            self.videoTimer = nil
         }
     }
     
@@ -101,5 +100,14 @@ class CustomPlayerView: UIView {
             self.trackBar.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.trackBar.topAnchor.constraint(equalTo: self.topAnchor),
         ])
+    }
+    
+    public func setupView(data: CardListModel){
+        self.imageView.image = UIImage(named: data.listImage ?? "")
+        self.marqueeLabel.text = data.listTitle
+        self.time = 0.0
+        self.trackBar.progress = 0.0
+        self.videoTimer = nil
+        self.videoTimer = Timer.scheduledTimer(timeInterval: 0.001, target: self, selector: #selector(self.changeTrackBar), userInfo: nil, repeats: true)
     }
 }
